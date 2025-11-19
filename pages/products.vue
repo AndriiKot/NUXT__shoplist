@@ -20,7 +20,7 @@
 
       <UCard class="mb-6">
         <template #header>
-          <h2 class="text-xl font-semibold text-gray-900">
+          <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
             Додати новий продукт
           </h2>
         </template>
@@ -54,7 +54,7 @@
       <UCard>
         <template #header>
           <div class="flex items-center justify-between">
-            <h2 class="text-xl font-semibold text-gray-900">
+            <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
               Список продуктів ({{ products.length }})
             </h2>
             
@@ -71,13 +71,12 @@
         </template>
 
         <div v-if="products.length === 0" class="text-center py-12">
-          <UIcon name="i-heroicons-clipboard-document-list-20-solid" class="text-gray-300 text-6xl mb-4" />
-          <p class="text-gray-500 text-lg">Список продуктів порожній</p>
-          <p class="text-gray-400">Додайте перший продукт вище</p>
+          <UIcon name="i-heroicons-clipboard-document-list-20-solid" class="text-gray-300 dark:text-gray-600 text-6xl mb-4" />
+          <p class="text-gray-500 dark:text-gray-400 text-lg">Список продуктів порожній</p>
+          <p class="text-gray-400 dark:text-gray-500">Додайте перший продукт вище</p>
         </div>
 
-        <!-- Список с продуктами -->
-        <ul v-else class="divide-y divide-gray-200">
+        <ul v-else class="divide-y divide-gray-200 dark:divide-gray-700">
           <ProductItem
             v-for="product in products"
             :key="product.id"
@@ -91,9 +90,9 @@
 </template>
 
 <script setup lang="ts">
-  const colorMode = useColorMode()
-  const isDark = computed(() => colorMode.value === 'dark')
-  const toggleTheme = () => { colorMode.preference = isDark.value ? 'light' : 'dark' }
+const colorMode = useColorMode()
+const isDark = computed(() => colorMode.value === 'dark')
+const toggleTheme = () => { colorMode.preference = isDark.value ? 'light' : 'dark' }
 
 const { 
   products, 
@@ -106,7 +105,6 @@ const newProductName = ref('')
 const isSubmitting = ref(false)
 const isClearing = ref(false)
 
-// Добавление продукта
 const handleSubmit = async () => {
   if (!newProductName.value.trim()) return
   
