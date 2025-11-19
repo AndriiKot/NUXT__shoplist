@@ -1,18 +1,23 @@
-<!-- pages/products.vue -->
 <template>
-  <div class="min-h-screen bg-gray-50 py-8">
+  <div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
     <UContainer>
-      <!-- Заголовок -->
+      <div class="text-right mb-4">
+        <UButton
+          :icon="isDark ? 'i-heroicons-moon-20-solid' : 'i-heroicons-sun-20-solid'"
+          @click="toggleTheme"
+          color="gray"
+          variant="ghost"
+        />
+      </div>
       <div class="text-center mb-8">
-        <h1 class="text-3xl font-bold text-gray-900 mb-2">
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
           Список продуктів
         </h1>
-        <p class="text-gray-600">
+        <p class="text-gray-600 dark:text-gray-300">
           Додавайте та видаляйте продукти. Дані зберігаються в localStorage.
         </p>
       </div>
 
-      <!-- Форма додавання -->
       <UCard class="mb-6">
         <template #header>
           <h2 class="text-xl font-semibold text-gray-900">
@@ -46,7 +51,6 @@
         </form>
       </UCard>
 
-      <!-- Список продуктів -->
       <UCard>
         <template #header>
           <div class="flex items-center justify-between">
@@ -66,7 +70,6 @@
           </div>
         </template>
 
-        <!-- Пустой список -->
         <div v-if="products.length === 0" class="text-center py-12">
           <UIcon name="i-heroicons-clipboard-document-list-20-solid" class="text-gray-300 text-6xl mb-4" />
           <p class="text-gray-500 text-lg">Список продуктів порожній</p>
@@ -88,6 +91,10 @@
 </template>
 
 <script setup lang="ts">
+  const colorMode = useColorMode()
+  const isDark = computed(() => colorMode.value === 'dark')
+  const toggleTheme = () => { colorMode.preference = isDark.value ? 'light' : 'dark' }
+
 const { 
   products, 
   addProduct, 
@@ -109,14 +116,12 @@ const handleSubmit = async () => {
     addProduct(newProductName.value)
     newProductName.value = ''
     
-    // Небольшая задержка для лучшего UX
     await new Promise(resolve => setTimeout(resolve, 300))
   } finally {
     isSubmitting.value = false
   }
 }
 
-// Очистка всех продуктов
 const clearAllProducts = async () => {
   isClearing.value = true
   
