@@ -92,7 +92,13 @@
 <script setup lang="ts">
 const colorMode = useColorMode()
 const isDark = computed(() => colorMode.value === 'dark')
-const toggleTheme = () => { colorMode.preference = isDark.value ? 'light' : 'dark' }
+const { sendTheme } = useThemeSync()
+
+const toggleTheme = () => { 
+  const newTheme = isDark.value ? 'light' : 'dark'
+  colorMode.preference = newTheme
+  sendTheme(newTheme)
+}
 
 const { 
   products, 
