@@ -5,7 +5,26 @@ export interface Product {
 
 export const useProducts = () => {
   const products = ref<Product[]>([])
+  const { init, send } = useSync('products-sync')
 
+  init((event) => {
+    const { type, data } = event.data
+    
+    switch (type) {
+      case 'PRODUCTS_UPDATED':
+        products.value = data
+        break
+      case 'PRODUCT_ADDED':
+        if (!products.value.find(p => p.id === data.id)) {
+          products.value.push(data)
+        }
+        break
+      case 'PRODUCT_REMOVED':
+        products.value = products.value.filter(p => p.id !== data.id)
+        break
+    }
+  })
+  
   const loadProducts = (): Product[] => {
     if (process.client) {
       const stored = localStorage.getItem('products')
@@ -20,7 +39,6 @@ export const useProducts = () => {
     }
   }
 
-  // Инициализация
   onMounted(() => {
     products.value = loadProducts()
   })
@@ -36,12 +54,15 @@ export const useProducts = () => {
     const updatedProducts = [...products.value, newProduct]
     products.value = updatedProducts
     saveProducts(updatedProducts)
+    send('PRODUCT_ADDED', newProduct)
   }
 
   const removeProduct = (id: string) => {
+    const productToRemove = products.value.find(product => product.id === id)
     const updatedProducts = products.value.filter(product => product.id !== id)
     products.value = updatedProducts
     saveProducts(updatedProducts)
+    send('PRODUCT_REMOVED', { id })
   }
 
   const clearProducts = () => {
